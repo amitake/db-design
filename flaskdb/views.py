@@ -139,3 +139,8 @@ def nativesql():
 
     itemlist = da.search_items()
     return render_template("additem.html", form=form, itemlist=itemlist)
+
+@app.route("/registor", methods=["GET", "POST"])
+def registor():
+    seat_name = request.args.get('seat_name', '')
+    return render_template("registor.html", seat_name=seat_name)
