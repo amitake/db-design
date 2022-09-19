@@ -161,21 +161,14 @@ def seatList():
         st_open_flg = da.search_open_flg_by_studnet_num(student_num=student_num)
         seat_state = da.search_state_by_seat_name(seat_name=seat_name)
         print(f'student_open_flg:{st_open_flg}')
-        print(f'seat_state:{seat_state}')
+        print(f'seat_state:{seat_state.state}')
+        print(f'seat_state:{seat_state.student_num}')
         
-        # if len(st_open_flg) != 0:
-        if st_open_flg == open_flg:
-            if seat_state==1:
-                da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
-            elif seat_state==0:
-                da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
-        else:
-            if seat_state==1:
-                da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
-            elif seat_state==0:
-                da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
-        # else:
-        #     return redirect(url_for("app.studentRegistor", seat_name=seat_name))
+        
+        if seat_state==1:
+            da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
+        elif seat_state==0:
+            da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
         
         da.update_open_flg(student_num=student_num, open_flg=open_flg)
         seat_list = da.search_seats()

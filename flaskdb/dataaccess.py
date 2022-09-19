@@ -144,7 +144,7 @@ class DataAccess:
         # search student data by student_num
     def search_state_by_seat_name(self, seat_name):
         query = sql.SQL("""
-            SELECT state FROM \"seats\" WHERE seat_name={seat_name}
+            SELECT state, student_num FROM \"seats\" WHERE seat_name={seat_name}
         """).format(
             seat_name = sql.Literal(seat_name)
         )
@@ -154,8 +154,9 @@ class DataAccess:
         for r in results:
             seat = Seat()
             seat.state = r[0]
-        print(seat.state)
-        return seat.state
+            seat.student_num = r[1]
+            states
+        return states
     
     # update seats data 
     def update_open_flg(self, student_num, open_flg):
