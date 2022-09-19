@@ -8,7 +8,7 @@ import pickle
 
 from flaskdb import apps, db, da
 from flaskdb.models import User, Item
-from flaskdb.forms import LoginForm, AddItemForm, SearchItemForm
+from flaskdb.forms import LoginForm, AddItemForm, SearchItemForm, StudentRegistorForm
 
 app = Blueprint("app", __name__)
 
@@ -141,13 +141,22 @@ def nativesql():
     return render_template("additem.html", form=form, itemlist=itemlist)
 
 # QRコードの接続先（着離席登録）
-@app.route("/registor", methods=["GET", "POST"])
-def registor():
+@app.route("/studentRegistor", methods=["GET", "POST"])
+def studentRegistor():
     seat_name = request.args.get('seat_name', '')
-    return render_template("registor.html", seat_name=seat_name)
+    form = StudentRegistorForm()
+
+    return render_template("studentRegistor.html", form=form, seat_name=seat_name)
 
 # 座席表画面
 @app.route("/seatList", methods=["GET", "POST"])
-def registor():
-    # seat_name = request.args.get('seat_name', '')
-    return render_template("seatList.html")
+def seatList():
+    if request.method =="POST":
+        seat_name = request.form["seat_name"]
+        student_num = request.form["student_num"]
+        open_flg = request.form["open_flg"]
+        print(f'seat_name:{seat_name}')
+        print(f'student_num:{student_num}')
+        print(f'open_flg:{open_flg}')
+    seat_list = da.search_seats()
+    return render_template("seatList.html", seat_list=seat_list)

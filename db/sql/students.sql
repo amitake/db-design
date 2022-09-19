@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS students;
 CREATE TABLE students (
-    student_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     student_num INT,
     student_name VARCHAR(255),
     study_category VARCHAR(255),

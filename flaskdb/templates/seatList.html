@@ -26,8 +26,6 @@
       <ul class="nav navbar-nav">
         {% if not "username" in session %}
         <li><a href="{{ url_for('app.login') }}">Login</a></li>
-        <li><a href="{{ url_for('app.registor') }}">Login</a></li>
-        <li><a href="{{ url_for('app.seatList') }}">Login</a></li>
         {% else %}
         <li><a href="{{ url_for('app.additem') }}">Add Item</a></li>
         <li><a href="{{ url_for('app.searchitem') }}">Search Item</a></li>
@@ -40,17 +38,7 @@
 {% endblock %}
 
 {% block content %}
-<table>
-    <!-- 一行目 -->
-    <tr>
-        <td>j1_6_a1</td>
-        <td>j1_6_a2</td>
-        <td>j1_6_a3</td>
-    </tr>
-    <tr>
-        <td>j1_6_a4</td>
-        <td>j1_6_a5</td>
-        <td>j1_6_a6</td>
-    </tr>
-</table>
+<div class="container">
+
+</div>
 {% endblock %}

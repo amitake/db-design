@@ -22,3 +22,25 @@ class Item(db.Model):
 
     def __repr__(self):
         return "<Item %r>" % self.id
+
+class Seat(db.Model):
+    __tablename__ = "seats"
+    id = db.Column(db.Integer, primary_key=True)
+    seat_name = db.Column(db.String(128), nullable=False)
+    student_num = db.Column(db.Integer, nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
+    state = db.Column(db.Integer, nullable=False)
+    
+    def __repr__(self):
+        return "<Seat %r>" % self.id
+
+class Student(db.Model):
+    __tablename__ = "students"
+    id = db.Column(db.Integer, primary_key=True)
+    student_num = db.Column(db.Integer, nullable=False)
+    student_name = db.Column(db.String(128), nullable=False)
+    study_category = db.Column(db.String(128), nullable=False)
+    open_flg = db.Column(db.Integer, nullable=False)
+    
+    def __repr__(self):
+        return "<Student %r>" % self.id

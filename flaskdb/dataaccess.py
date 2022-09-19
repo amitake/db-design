@@ -4,7 +4,7 @@ Copyright (C) 2022 Yasuhiro Hayashi
 """
 from psycopg2 import sql, connect, ProgrammingError
 import flaskdb.var as v
-from flaskdb.models import Item
+from flaskdb.models import Item, Seat, Student
 
 class DataAccess:
 
@@ -86,3 +86,41 @@ class DataAccess:
             ])
         )
         self.execute(query, autocommit=True)
+        
+    # search seat data
+    def search_seats(self):
+        query = sql.SQL("""
+            SELECT * FROM \"seats\"
+        """)
+        # self.show_sql(query)
+        results = self.execute(query, autocommit=True)
+        seat_list = []
+        for r in results:
+            seat = Seat()
+            seat.id = r[0]
+            seat.seat_name = r[1]
+            seat.student_num = r[2]
+            seat.time = r[3]
+            seat.state = r[4]
+            seat_list.append(seat)
+        return seat_list
+    
+    # search student data by student_num
+    def search_student_by_studnet_num(self, student_num):
+        query = sql.SQL("""
+            SELECT * FROM \"students\" WHERE student_num={student_num}
+        """).format(
+            student_num = sql.Literal(student_num)
+        )
+        # self.show_sql(query)
+        results = self.execute(query, autocommit=True)
+        student_list = []
+        for r in results:
+            student = Student()
+            student.id = r[0]
+            student.student_num = r[1]
+            student.student_name = r[2]
+            student.study_category = r[3]
+            student.open_flg = r[4]
+            student_list.append(student)
+        return student_list
