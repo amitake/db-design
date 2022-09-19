@@ -142,6 +142,47 @@ class DataAccess:
     # students
     # ----------------------------------------------------------------------------
     
+    def add_student(self, student_num, student_name, study_category, study_content, open_flg):
+        query = sql.SQL("""
+            INSERT INTO \"students\" ( {fields} ) VALUES ( {values} )
+        """).format(
+            tablename = sql.Identifier("students"),
+            fields = sql.SQL(", ").join([
+                sql.Identifier("student_num"),
+                sql.Identifier("student_name"),
+                sql.Identifier("study_category"),
+                sql.Identifier("study_content"),
+                sql.Identifier("open_flg")
+            ]),
+            values = sql.SQL(", ").join([
+                sql.Literal(student_num),
+                sql.Literal(student_name),
+                sql.Literal(study_category),
+                sql.Literal(study_content),
+                sql.Literal(open_flg)
+            ])
+        )
+        self.execute(query, autocommit=True)
+        
+    # search student data
+    def search_student(self):
+        query = sql.SQL("""
+            SELECT * FROM \"students\" ORDER BY id
+        """)
+        # self.show_sql(query)
+        results = self.execute(query, autocommit=True)
+        student_list = []
+        for r in results:
+            student = Student()
+            student.id = r[0]
+            student.student_num = r[1]
+            student.student_name = r[2]
+            student.study_category = r[3]
+            student.open_flg = r[4]
+            student.study_content = r[5]
+            student_list.append(student)
+        return student_list
+    
     # search student data by student_num
     def search_student_by_studnet_num(self, student_num):
         query = sql.SQL("""
@@ -159,6 +200,7 @@ class DataAccess:
             student.student_name = r[2]
             student.study_category = r[3]
             student.open_flg = r[4]
+            student.study_content = r[5]
             student_list.append(student)
         return student_list
 

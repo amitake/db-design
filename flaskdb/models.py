@@ -41,6 +41,6 @@ class Student(db.Model):
     student_name = db.Column(db.String(128), nullable=False)
     study_category = db.Column(db.String(128), nullable=False)
     open_flg = db.Column(db.Integer, nullable=False)
-    
+    study_content = db.Column(db.String(128), nullable=False)
     def __repr__(self):
         return "<Student %r>" % self.id

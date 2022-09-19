@@ -39,31 +39,51 @@
 
 {% block content %}
 <div class="container">
-  {% for seat in seat_list %}
-  <table>
-    <tr>
-    <!-- state=0:非公開（黒）, state=1:公開（青） -->
-    {% if seat.state==0 %}
-      <td style="color:black">{{ seat.seat_name }}</td>
-      <td>空席</td>
-    {% else %}
-      {% for student in student_list %}
-        {% if seat.student_num==student.student_num %}
-          {% if student.open_flg==1 %}
-            <td style="color:blue">{{ seat.seat_name }}</td>
-            <td>使用中</td>
-            <td><a href="{{ url_for('app.studentDetail', student_num=seat.student_num) }}">詳細</a></td>
-          {% elif student.open_flg==0 %}
-            <td style="color:gray">{{ seat.seat_name }}</td>
-            <td>使用中</td>
-          {% endif%}
-        {% endif%}
-      {% endfor%}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}"> {{ message|capitalize }} </div>
+      {% endfor %}
     {% endif %}
-    </tr>
-    </table>
+  {% endwith %}
+  {% if form %}
+    {% for field in form.errors %}
+      {% for error in form.errors[field] %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endfor %}
     {% endfor %}
-</div>
+  {% endif %}
+  <form action="{{ url_for('app.studentCreate') }}" method="POST" novalidate class="mb-10">
+    <div class="form-group">
+      {{ form.student_num.label }}</br>
+      {{ form.student_num(type="text", id="student_num", class="form-control", placeholder="Enter keyword") }}
+    </div>
+    <div class="form-group">
+      {{ form.student_name.label }}</br>
+      {{ form.student_name(type="text", id="student_name", class="form-control", placeholder="Enter keyword") }}
+    </div>
+    <div class="form-group">
+      {{ form.study_category.label }}</br>
+      {{ form.study_category(type="text", id="study_category", class="form-control", placeholder="Enter keyword") }}
+    </div>
+    <div class="form-group">
+      {{ form.study_content.label }}</br>
+      {{ form.study_content(type="text", id="study_content", class="form-control", placeholder="Enter keyword") }}
+    </div>
+    <div class="form-group">
+      {{ form.open_flg.label }}</br>
+      {% for subopen in form.open_flg %}
+      <tr>
+        <td>{{ subopen }}</td>
+        <td>{{ subopen.label }}</td>
+      </tr>
+      {% endfor %}
+    </div>
+
+    {{ form.csrf_token }}
+    {{ form.cancel(class="btn") }}
+    {{ form.submit(class="btn btn-primary") }}
+  </form>
 {% endblock %}
 
 {% block scripts %}

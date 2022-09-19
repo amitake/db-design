@@ -105,3 +105,53 @@ class StudentRegistorForm(FlaskForm):
         seat.seat_name = self.seat_name.data
         seat.student_num = self.student_num.data
         seat.open_flg = self.open_flg.data
+        
+class AddStudentForm(FlaskForm):
+    student_num = StringField(
+        "Student Number",
+        validators = [
+            DataRequired(message="Student Number is required."),
+        ],
+    )
+    student_name = StringField(
+        "Student Name",
+        validators = [
+            DataRequired(message="Student Name is required."),
+        ],
+    )
+    study_category = StringField(
+        "Study Category",
+        validators = [
+            DataRequired(message="Study Category is required."),
+        ],
+    )
+    study_content = StringField(
+        "Study Content",
+        validators = [
+            DataRequired(message="tudy content is required."),
+        ],
+    )
+    open_flg = RadioField(
+        "Open Flg",
+        validators = [
+            DataRequired(message="Open Flg is required."),
+        ],
+        choices=[('1', '公開'), ('0', '非公開')]
+        
+    )
+    cancel = ButtonField("Cencel")
+    submit = SubmitField("Submit")
+
+    def copy_from(self, student):
+        self.student_num.data = student.student_num
+        self.student_name.data = student.student_name
+        self.study_category.data = student.study_category
+        self.study_content.data = student.study_content
+        self.open_flg.data = student.open_flg
+
+    def copy_to(self, student):
+        student.student_num = self.student_num.data
+        student.student_name = self.student_name.data
+        student.study_category = self.study_category.data
+        student.study_content = self.study_content.data
+        student.open_flg = self.open_flg.data

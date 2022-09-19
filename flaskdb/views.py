@@ -8,7 +8,7 @@ import pickle
 
 from flaskdb import apps, db, da
 from flaskdb.models import User, Item
-from flaskdb.forms import LoginForm, AddItemForm, SearchItemForm, StudentRegistorForm
+from flaskdb.forms import AddStudentForm, LoginForm, AddItemForm, SearchItemForm, StudentRegistorForm
 
 app = Blueprint("app", __name__)
 
@@ -170,26 +170,18 @@ def seatList():
         ex_student_num = seat_state[0].student_num
         print(type(ex_student_num))
         if ex_student_num==student_num: # 受け取った座席番号に同学生がすでに登録されている場合
-            print("受け取った座席番号に同学生がすでに登録されている場合")
             if ex_seat_state==1: # 且つ、着離席状況が[着席]になっている場合
-                print("且つ、着離席状況が[着席]になっている場合")
                 if st_open_flg!=open_flg: #公開設定が変更ありの場合
-                    print("公開設定が変更ありの場合")
                     # [着席]のまま（タイムスタンプ打ってるからアップデートは行う）
                     da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
                 else: # 公開設定がなしの場合
-                    print("公開設定が変更なしの場合")
                     # [離席]に変更
                     da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
             elif ex_seat_state==0: # 且つ、着離席状況が[離席]になっている場合
-                print("且つ、着離席状況が[離席]になっている場合")
                 # [着席]に変更
                 da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
-                
         else: # 受け取った座席番号に違う学生がいる場合
-            print("受け取った座席番号に違う学生がいる場合")
             if ex_seat_state==1: # 且つ、着離席状況が[着席]になっている場合
-                print("且つ、着離席状況が[着席]になっている場合")
                 print("違う人が座っているけど.......?") # ちょっとここはとりあえずこれで
                 # [着席]に変更
                 da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
@@ -199,4 +191,25 @@ def seatList():
                 da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
         da.update_open_flg(student_num=student_num, open_flg=open_flg)
     seat_list = da.search_seats()
-    return render_template("seatList.html", seat_list=seat_list, )
+    student_list = da.search_student()
+    return render_template("seatList.html", seat_list=seat_list, student_list=student_list)
+
+# 学籍詳細
+@app.route("/studentDetail", methods=["GET", "POST"])
+def studentDetail():
+    student_num :int = request.args.get('student_num', '')
+    student_list :list = da.search_student_by_studnet_num(student_num=student_num)
+    return render_template("studentDetail.html", student_list= student_list)
+
+@app.route("/studentCreate", methods=["GET", "POST"])
+def studentCreate():
+    form = AddStudentForm()
+    if request.method =="POST":
+        student_num = int(request.form["student_num"])
+        student_name = request.form["student_name"]
+        study_category = request.form["study_category"]
+        study_content = request.form["study_content"]
+        open_flg = request.form["open_flg"]
+        da.add_student(student_num=student_num, student_name=student_name, study_category=study_category, study_content=study_content, open_flg=open_flg)
+        print("add student")
+    return render_template("studentCreate.html", form=form)
