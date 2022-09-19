@@ -37,27 +37,3 @@
 </div>
 {% endblock %}
 
-{% block content %}
-<form action="" method="POST">
-  <input type="hidden" name="seat_name" value="{{ seat_name }}">
-  <div>
-    学籍番号：
-    <input type="text" name="student_num" required>
-  </div>
-  <div>
-    公開設定：
-    <input type="radio" name="open_flg" value=1 checked>公開
-    <input type="radio" name="open_flg" value=0 >非公開
-  </div>
-  <div>
-    <button typr="submit">送信</button>
-  </div>
-</form>
-
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ bootstrap_find_resource('jquery.js', cdn='jquery') }}"></script>
-<script src="{{ bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap') }}"></script>
-<script src="/static/js/flaskdb.js"></script>
-{% endblock %}
