@@ -39,9 +39,6 @@
 
 {% block content %}
 <div class="container">
-<<<<<<< HEAD
-
-=======
     {% for seat in seat_list %}
     <!-- state=0:非公開（黒）, state=1:公開（青） -->
     {% if seat.state==0 %}
@@ -50,6 +47,5 @@
     <li style="color:blue">{{ seat.seat_name }}</li>
     {% endif %}
     {% endfor %}
->>>>>>> 2022058
 </div>
 {% endblock %}
