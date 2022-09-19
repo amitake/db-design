@@ -145,12 +145,12 @@ def nativesql():
 def studentRegistor():
     seat_name = request.args.get('seat_name', '')
     form = StudentRegistorForm()
-
     return render_template("studentRegistor.html", form=form, seat_name=seat_name)
 
 # 座席表画面
 @app.route("/seatList", methods=["GET", "POST"])
 def seatList():
+    # post
     if request.method =="POST":
         seat_name = request.form["seat_name"]
         student_num = request.form["student_num"]
@@ -158,5 +158,25 @@ def seatList():
         print(f'seat_name:{seat_name}')
         print(f'student_num:{student_num}')
         print(f'open_flg:{open_flg}')
-    seat_list = da.search_seats()
-    return render_template("seatList.html", seat_list=seat_list)
+        st_open_flg = da.search_open_flg_by_studnet_num(student_num=student_num)
+        seat_state = da.search_state_by_seat_name(seat_name=seat_name)
+        print(f'student_open_flg:{st_open_flg}')
+        print(f'seat_state:{seat_state}')
+        
+        # if len(st_open_flg) != 0:
+        if st_open_flg == open_flg:
+            if seat_state==1:
+                da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
+            elif seat_state==0:
+                da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
+        else:
+            if seat_state==1:
+                da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
+            elif seat_state==0:
+                da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
+        # else:
+        #     return redirect(url_for("app.studentRegistor", seat_name=seat_name))
+        
+        da.update_open_flg(student_num=student_num, open_flg=open_flg)
+        seat_list = da.search_seats()
+    return render_template("seatList.html", seat_list=seat_list, )
