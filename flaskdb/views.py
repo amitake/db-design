@@ -153,23 +153,50 @@ def seatList():
     # post
     if request.method =="POST":
         seat_name = request.form["seat_name"]
-        student_num = request.form["student_num"]
-        open_flg = request.form["open_flg"]
+        student_num = int(request.form["student_num"])
+        open_flg = int(request.form["open_flg"])
         print(f'seat_name:{seat_name}')
         print(f'student_num:{student_num}')
+        print(type(student_num))
         print(f'open_flg:{open_flg}')
         st_open_flg = da.search_open_flg_by_studnet_num(student_num=student_num)
         seat_state = da.search_state_by_seat_name(seat_name=seat_name)
         print(f'student_open_flg:{st_open_flg}')
-        print(f'seat_state:{seat_state.state}')
-        print(f'seat_state:{seat_state.student_num}')
+        print(f'seat_state:{seat_state[0].state}')
+        print(f'seat_student_num:{seat_state[0].student_num}')
         
-        
-        if seat_state==1:
-            da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
-        elif seat_state==0:
-            da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
-        
+        # 現在の座席状況（postで受け取ったdataで処理する前）
+        ex_seat_state = seat_state[0].state
+        ex_student_num = seat_state[0].student_num
+        print(type(ex_student_num))
+        if ex_student_num==student_num: # 受け取った座席番号に同学生がすでに登録されている場合
+            print("受け取った座席番号に同学生がすでに登録されている場合")
+            if ex_seat_state==1: # 且つ、着離席状況が[着席]になっている場合
+                print("且つ、着離席状況が[着席]になっている場合")
+                if st_open_flg!=open_flg: #公開設定が変更ありの場合
+                    print("公開設定が変更ありの場合")
+                    # [着席]のまま（タイムスタンプ打ってるからアップデートは行う）
+                    da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
+                else: # 公開設定がなしの場合
+                    print("公開設定が変更なしの場合")
+                    # [離席]に変更
+                    da.update_seats(student_num=student_num, seat_name=seat_name, state=0)
+            elif ex_seat_state==0: # 且つ、着離席状況が[離席]になっている場合
+                print("且つ、着離席状況が[離席]になっている場合")
+                # [着席]に変更
+                da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
+                
+        else: # 受け取った座席番号に違う学生がいる場合
+            print("受け取った座席番号に違う学生がいる場合")
+            if ex_seat_state==1: # 且つ、着離席状況が[着席]になっている場合
+                print("且つ、着離席状況が[着席]になっている場合")
+                print("違う人が座っているけど.......?") # ちょっとここはとりあえずこれで
+                # [着席]に変更
+                da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
+            elif ex_seat_state==0: # 且つ、着離席状況が[離席]になっている場合
+                print("且つ、着離席状況が[離席]になっている場合")
+                # [着席]に変更
+                da.update_seats(student_num=student_num, seat_name=seat_name, state=1)
         da.update_open_flg(student_num=student_num, open_flg=open_flg)
-        seat_list = da.search_seats()
+    seat_list = da.search_seats()
     return render_template("seatList.html", seat_list=seat_list, )

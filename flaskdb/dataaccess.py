@@ -87,6 +87,10 @@ class DataAccess:
         )
         self.execute(query, autocommit=True)
         
+    # ----------------------------------------------------------------------------
+    # seats
+    # ----------------------------------------------------------------------------
+    
     # search seat data
     def search_seats(self):
         query = sql.SQL("""
@@ -104,6 +108,39 @@ class DataAccess:
             seat.state = r[4]
             seat_list.append(seat)
         return seat_list
+    
+    # search student data by student_num
+    def search_state_by_seat_name(self, seat_name):
+        query = sql.SQL("""
+            SELECT state, student_num FROM \"seats\" WHERE seat_name={seat_name}
+        """).format(
+            seat_name = sql.Literal(seat_name)
+        )
+        # self.show_sql(query)
+        results = self.execute(query, autocommit=True)
+        states = []
+        for r in results:
+            seat = Seat()
+            seat.state = r[0]
+            seat.student_num = r[1]
+            states.append(seat)
+        return states
+
+    # update seats data 
+    def update_seats(self, student_num, seat_name, state):
+        query = sql.SQL("""
+            UPDATE \"seats\" SET student_num={student_num}, time=now(), state={state} WHERE seat_name={seat_name}
+        """).format(
+            student_num = sql.Literal(student_num),
+            state = sql.Literal(state),
+            seat_name = sql.Literal(seat_name)    
+        )
+        # self.show_sql(query)
+        self.execute(query, autocommit=True)
+    
+    # ----------------------------------------------------------------------------
+    # students
+    # ----------------------------------------------------------------------------
     
     # search student data by student_num
     def search_student_by_studnet_num(self, student_num):
@@ -141,23 +178,6 @@ class DataAccess:
         print(student.open_flg)
         return student.open_flg
     
-        # search student data by student_num
-    def search_state_by_seat_name(self, seat_name):
-        query = sql.SQL("""
-            SELECT state, student_num FROM \"seats\" WHERE seat_name={seat_name}
-        """).format(
-            seat_name = sql.Literal(seat_name)
-        )
-        # self.show_sql(query)
-        results = self.execute(query, autocommit=True)
-        states = []
-        for r in results:
-            seat = Seat()
-            seat.state = r[0]
-            seat.student_num = r[1]
-            states
-        return states
-    
     # update seats data 
     def update_open_flg(self, student_num, open_flg):
         query = sql.SQL("""
@@ -165,18 +185,6 @@ class DataAccess:
         """).format(
             open_flg = sql.Literal(open_flg),
             student_num = sql.Literal(student_num)
-        )
-        # self.show_sql(query)
-        self.execute(query, autocommit=True)
-        
-        # update seats data 
-    def update_seats(self, student_num, seat_name, state):
-        query = sql.SQL("""
-            UPDATE \"seats\" SET student_num={student_num}, time=now(), state={state} WHERE seat_name={seat_name}
-        """).format(
-            student_num = sql.Literal(student_num),
-            state = sql.Literal(state),
-            seat_name = sql.Literal(seat_name)    
         )
         # self.show_sql(query)
         self.execute(query, autocommit=True)
