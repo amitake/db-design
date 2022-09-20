@@ -57,8 +57,12 @@
             <td style="color:red">{{ seat.seat_name }}</td>
             {% elif student.study_category=='VR' %}
             <td style="color:olive">{{ seat.seat_name }}</td>
-            {% elif student.study_category=='その他' %}
+            {% elif student.study_category=='iOS' %}
             <td style="color:palevioletred">{{ seat.seat_name }}</td>
+            {% elif student.study_category=='データベース' %}
+            <td style="color:purple">{{ seat.seat_name }}</td>
+            {% elif student.study_category=='その他' %}
+            <td style="color:orange">{{ seat.seat_name }}</td>
             {% endif %}
             <td>使用中</td>
             <td><a href="{{ url_for('app.studentDetail', student_num=seat.student_num) }}">詳細</a></td>
@@ -72,6 +76,18 @@
     </tr>
     </table>
     {% endfor %}
+</div>
+
+<div class="container">
+  <hr>
+  <ul>
+    <li style="color:blue">画像処理</li>
+    <li style="color:red">自然言語処理</li>
+    <li style="color:olive">VR</li>
+    <li style="color:palevioletred">iOS</li>
+    <li style="color:purple">データベース</li>
+    <li style="color:orange">その他</li>
+  </ul>
 </div>
 {% endblock %}
 

@@ -40,23 +40,21 @@
 
 {% block content %}
 <div class="container">
-  <a href="{{ url_for('app.seatList') }}">座席表</a>
-  <table>
-      {% for student in student_list %}
-      <tr>
-          <th>Student Name</th>
-          <td>{{ student.student_name }}</td>
-      </tr>
-      <tr>
-        <th>Study Category</th>
-        <td>{{ student.study_category }}</td>
-      </tr>
-      <tr>
-        <th>Study Content</th>
-        <td>{{ student.study_content }}</td>
-      </tr>
-      {% endfor %}
-  </table>
+  <div class="m-3"><a class="btn btn-primary" href="{{ url_for('app.seatList') }}" role="button">座席表</a></div>
+  <hr>
+  <div class="m-3">
+  <ul class="list-group">
+    {% for student in student_list %}
+      <li class="list-group-item list-group-item-info">Student Name</li>
+      <li class="list-group-item">{{ student.student_name }}</li>
+
+      <li class="list-group-item list-group-item-info">Study Category</li>
+      <li class="list-group-item">{{ student.study_category }}</li>
+      <li class="list-group-item list-group-item-info">Study Content</li>
+      <li class="list-group-item">{{ student.study_content }}</li>
+    {% endfor %}
+  </ul>
+  </div>
 </div>
 {% endblock %}
 
