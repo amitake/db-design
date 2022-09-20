@@ -26,6 +26,7 @@
       <ul class="nav navbar-nav">
         {% if not "username" in session %}
         <li><a href="{{ url_for('app.login') }}">Login</a></li>
+        <li><a href="{{ url_for('app.seatList') }}">SeatList</a></li>
         {% else %}
         <li><a href="{{ url_for('app.additem') }}">Add Item</a></li>
         <li><a href="{{ url_for('app.searchitem') }}">Search Item</a></li>

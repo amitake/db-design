@@ -26,6 +26,7 @@
       <ul class="nav navbar-nav">
         {% if not "username" in session %}
         <li><a href="{{ url_for('app.login') }}">Login</a></li>
+        <li><a href="{{ url_for('app.studentCreate') }}">StudentCreate</a></li>
         {% else %}
         <li><a href="{{ url_for('app.additem') }}">Add Item</a></li>
         <li><a href="{{ url_for('app.searchitem') }}">Search Item</a></li>
@@ -50,12 +51,20 @@
       {% for student in student_list %}
         {% if seat.student_num==student.student_num %}
           {% if student.open_flg==1 %}
+            {% if student.study_category=='画像処理' %}
             <td style="color:blue">{{ seat.seat_name }}</td>
+            {% elif student.study_category=='自然言語処理' %}
+            <td style="color:red">{{ seat.seat_name }}</td>
+            {% elif student.study_category=='VR' %}
+            <td style="color:olive">{{ seat.seat_name }}</td>
+            {% elif student.study_category=='その他' %}
+            <td style="color:palevioletred">{{ seat.seat_name }}</td>
+            {% endif %}
             <td>使用中</td>
             <td><a href="{{ url_for('app.studentDetail', student_num=seat.student_num) }}">詳細</a></td>
           {% elif student.open_flg==0 %}
             <td style="color:gray">{{ seat.seat_name }}</td>
-            <td>使用中</td>
+            <td>使用中(非公開)</td>
           {% endif%}
         {% endif%}
       {% endfor%}
